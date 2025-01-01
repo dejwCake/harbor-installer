@@ -8,7 +8,7 @@ Harbor installer is a command to install or update harbor in your existing proje
 
 First clone this repo to your computer.
 
-`git clone git@github.com:BRACKETS-by-TRIAD/harbor-installer.git`
+`git clone git@github.com:dejwCake/harbor-installer.git`
 
 If you already have harbor installer installed in your system, please pull the latest version
 
