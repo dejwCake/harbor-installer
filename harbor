@@ -51,7 +51,6 @@ function getBranch {
 
 function getPhpVersion {
     PHP=""
-    num=1
     for i in "$@"
     do
         case ${i} in
@@ -102,12 +101,6 @@ function getArgsForInstall {
                 BRANCH="${i#*=}"
                 ;;
 
-            -v=*|--version=*)
-                if [ ${i#*=} = '2.0' ]; then
-                    BRANCH="2.0"
-                fi
-                ;;
-
             *)
                 if [[ $num = 1 ]]; then
                     TYPE=$i
@@ -154,9 +147,10 @@ function install {
     fi
 
     if [[ -n "$PHP" ]]; then
-        if [[ $PHP = "7.3" || $PHP = "7.4" ]]; then
+        if [[ $PHP = "8.1" || $PHP = "8.2" || $PHP = "8.3" || $PHP = "8.4" ]]; then
             setSed
             ${SEDCMD} "s/HARBOR_PHP_VERSION=.*/HARBOR_PHP_VERSION=${PHP}/" .env.harbor
+            ${SEDCMD} "s/HARBOR_PHP_QA_VERSION=.*/HARBOR_PHP_QA_VERSION=${PHP}/" .env.harbor
         fi
     fi
 
