@@ -155,7 +155,7 @@ function install {
 
     VERSION=$(./harbor -v)
     MAJOR_VERSION="$(cut -d '.' -f 1 <<< "$VERSION")"
-    if [[ $MAJOR_VERSION -eq '3' ]]; then
+    if [[ $MAJOR_VERSION -eq '3' || $MAJOR_VERSION -eq '4' ]]; then
       cp ./docker-compose.override.example.yml ./docker-compose.override.yml
     fi
 
@@ -228,6 +228,8 @@ function update {
               updatev2
             elif [[ $MAJOR_VERSION -eq '3' ]]; then
               updatev3
+            elif [[ $MAJOR_VERSION -eq '4' ]]; then
+              updatev4
             fi
             UPDATED=$?
 
@@ -308,6 +310,11 @@ function updatev3 {
     fi
     rm -rf harbor-backup
     return 0
+}
+
+function updatev4 {
+    #As the v4 structure is the same, we are able to reuse updatev3
+    updatev3 "$@"
 }
 
 function new {
