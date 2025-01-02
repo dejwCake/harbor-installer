@@ -73,12 +73,6 @@ function getArgsForNew {
                 BRANCH="${i#*=}"
                 ;;
 
-            -v=*|--version=*)
-                if [ ${i#*=} = '2.0' ]; then
-                    BRANCH="2.0"
-                fi
-                ;;
-
             --dev)
                 DEV="--dev"
                 ;;
