@@ -34,14 +34,14 @@ function setSed {
     esac
 }
 
-function getBranch {
-    # get requested branch
-    BRANCH="master"
+function getHarborVersion {
+    # get requested harbor version
+    HARBOR_VERSION="master"
     for i in "$@"
     do
         case ${i} in
-            -b=*|--branch=*)
-                BRANCH="${i#*=}"
+            -b=*|--branch=*|-t=*|--tag=*)
+                HARBOR_VERSION="${i#*=}"
                 ;;
             *)
                 ;;
@@ -62,14 +62,14 @@ function getPhpVersion {
 }
 
 function getArgsForNew {
-    BRANCH="master"
+    HARBOR_VERSION="master"
     DEV=""
     num=1
     for i in "$@"
     do
         case ${i} in
-            -b=*|--branch=*)
-                BRANCH="${i#*=}"
+            -b=*|--branch=*|-t=*|--tag=*)
+                HARBOR_VERSION="${i#*=}"
                 ;;
 
             --dev)
@@ -92,13 +92,13 @@ function getArgsForNew {
 }
 
 function getArgsForInstall {
-    BRANCH="master"
+    HARBOR_VERSION="master"
     num=1
     for i in "$@"
     do
         case ${i} in
-            -b=*|--branch=*)
-                BRANCH="${i#*=}"
+            -b=*|--branch=*|-t=*|--tag=*)
+                HARBOR_VERSION="${i#*=}"
                 ;;
 
             *)
@@ -130,11 +130,11 @@ function install {
     esac
 
     echo "Downloading harbor ..."
-    curl -L ${GITHUB_VENDOR_URL}${HARBOR}/archive/${BRANCH}.zip > harbor.zip
+    curl -L ${GITHUB_VENDOR_URL}${HARBOR}/archive/${HARBOR_VERSION}.zip > harbor.zip
 
     echo "Unzipping harbor ..."
     unzip -a -u -q harbor.zip
-    HARBOR_DIR=${HARBOR}-${BRANCH}
+    HARBOR_DIR=${HARBOR}-${HARBOR_VERSION}
     mv ${HARBOR_DIR}/README.md ./harbor-README.md
     rm -rf ${HARBOR_DIR}/.gitignore
     shopt -s dotglob
@@ -160,7 +160,7 @@ function install {
 }
 
 function update {
-    getBranch "$@"
+    getHarborVersion "$@"
 
     if [[ -f harbor ]]; then
         TYPE=$(./harbor -t)
@@ -188,11 +188,11 @@ function update {
         stty raw -echo ; answer=$(head -c 1) ; stty ${old_stty_cfg} # Careful playing with stty
         if echo "$answer" | grep -iq "^y" ;then
             echo "Downloading harbor ..."
-            curl -L ${GITHUB_VENDOR_URL}${HARBOR}/archive/${BRANCH}.zip > harbor.zip
+            curl -L ${GITHUB_VENDOR_URL}${HARBOR}/archive/${HARBOR_VERSION}.zip > harbor.zip
 
             echo "Unzipping harbor ..."
             unzip -a -u -q harbor.zip
-            HARBOR_DIR=${HARBOR}-${BRANCH}
+            HARBOR_DIR=${HARBOR}-${HARBOR_VERSION}
 
             NEW_VERSION=$(./${HARBOR_DIR}/harbor -v)
             NEW_VERSION=$(./${HARBOR_DIR}/harbor -v)
@@ -321,21 +321,21 @@ function new {
 
     case "$TYPE" in
         craftable)
-            install craftable -b=${BRANCH} -p=${PHP}
+            install craftable -b=${HARBOR_VERSION} -p=${PHP}
             ./harbor new craftable ${DEV}
             ;;
 
         laravel)
-            install laravel -b=${BRANCH} -p=${PHP}
+            install laravel -b=${HARBOR_VERSION} -p=${PHP}
             ./harbor new laravel
             ;;
 
         php)
-            install php -b=${BRANCH} -p=${PHP}
+            install php -b=${HARBOR_VERSION} -p=${PHP}
             ;;
 
         ionic)
-            install ionic -b=${BRANCH}
+            install ionic -b=${HARBOR_VERSION}
             ./harbor new ionic
             ;;
 
