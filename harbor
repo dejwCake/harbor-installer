@@ -36,7 +36,7 @@ function setSed {
 
 function getHarborVersion {
     # get requested harbor version
-    HARBOR_VERSION="master"
+    HARBOR_VERSION="main"
     for i in "$@"
     do
         case ${i} in
@@ -62,7 +62,7 @@ function getPhpVersion {
 }
 
 function getArgsForNew {
-    HARBOR_VERSION="master"
+    HARBOR_VERSION="main"
     DEV=""
     num=1
     for i in "$@"
@@ -92,7 +92,7 @@ function getArgsForNew {
 }
 
 function getArgsForInstall {
-    HARBOR_VERSION="master"
+    HARBOR_VERSION="main"
     num=1
     for i in "$@"
     do
